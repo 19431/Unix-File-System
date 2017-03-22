@@ -1,12 +1,3 @@
-/*  Name: Oluwaseyi Oni.  */
-/*  UID: 113994104                */
-/*  Section: 0306(4:00pm Angela)  */ 
-/*  Terpconnect login Id: ooni    */ 
-/*  Project4                      */ 
-/*  I pledge on my honor that I   */ 
-/*  have not given or received    */ 
-/*  any unauthorized              */ 
-/*  assistance on this assignment */ 
 
 #include <stdio.h>
 #include "fs-sim.h"
@@ -25,38 +16,26 @@ static void helper_print(Directory *dir, Fs_sim *files);
 
 /*function starts the filesystem by initializing root directory*/
 void mkfs(Fs_sim *files){
-  /*check if files is a null pointer*/
   if(files){
-    /*calls on helper function to make directory, uses "null" as a param
-      because no directory is existent at the time of function call.
-      Root directory is a.k.a "/" */
     /*creates a directory and casts it from void pointer*/
     files-> root_dir= (Directory *) create(NULL, "/", 1);
     /*every malloc operation is assumed to be successful*/
     if (files-> root_dir)
       files-> curr_dir= files-> root_dir;      
-  }
-   else{
-     /*DO NOTHING. "files" is assumed to never be a null pointer.
-       Therefore not handling this in my solution*/
-   } 
+  }   
 }
 
 /*function destroys file system by deleting everything in it
 All dynamically allocated memory in the heap will be freed*/
 void rmfs(Fs_sim *files){
-  /*cant free a null pointer*/
-  if (files){
-    /*all files in the root directory by sending head node
-      to helper function to free all node links*/
+  if (files){   
     if(files-> root_dir-> files){
       delete_files(files-> root_dir-> files, ALL);
     }
     /*all existing subdirectories in current directory must be deleted*/
     if (files-> root_dir){
       /*remove contents of this directory branch*/
-      delete_subdirectory(files-> root_dir, ALL);
-      /*move to next directory branch*/
+      delete_subdirectory(files-> root_dir, ALL);      
     }
     /*when the file system is empty, the root directory is freed*/
     free(files-> root_dir-> dir_name);
@@ -140,8 +119,7 @@ int rm(Fs_sim *files, const char arg[]){
   File *file_pointer= NULL, *file_holder= NULL;
   Directory *dir_pointer= NULL, *dir_holder= NULL;
   int result= 1;
-  if (files || arg){
-    /*todo:comment*/
+  if (files || arg){   
     if (!helper_type(files-> curr_dir, arg) || special_case(arg) ||
 	(strchr(arg, '/') && strcmp(arg, "/"))){
       result= 0;
@@ -151,8 +129,7 @@ int rm(Fs_sim *files, const char arg[]){
     if (helper_type(files-> curr_dir, arg) == 'f'){
       file_pointer= files-> curr_dir-> files;
       /*file to be deleted is the head file*/
-      if (!strcmp(file_pointer-> file_name, arg)){
-	/*delete just ONE file*/
+      if (!strcmp(file_pointer-> file_name, arg)){	
 	file_holder= file_pointer;
 	/*head points to head-> next_file*/
 	files-> curr_dir-> files= file_pointer-> next_file;
@@ -259,9 +236,7 @@ int touch (Fs_sim *files, const char arg[]){
 	/*creates a file and casts it from void pointer*/
 	files-> curr_dir-> files= (File *) create(files-> curr_dir, arg, 2);
 	file_inserted= 1;
-      }
-      /*means there are existing files in curr_dir.
-       create new file and insert in increasing order*/
+      }      
       else{
 	/*curr_file moves through entire list until it reaches the end
 	 indicated by NULL*/
@@ -275,10 +250,7 @@ int touch (Fs_sim *files, const char arg[]){
 	    file_inserted= 1;
 	    return result;
 	  }
-	  /*since arg and curr_file's name cant be the same in this
-	  condition branch. The remaining option is that arg is > name.
-	  to truly ensure increasing order checks for both
-	     previous and next nodes are essential*/
+	 
 	  /*if curr_file has no next file*/
 	  if (!curr_file-> next_file){
 	    /*creates a file and casts it from void pointer*/
